@@ -1,22 +1,17 @@
 === Website Registration ===
 Contributors: Freelynx  
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LTUB9HAHBXTHJ
-Tags: website, registration, metadata
+Tags: website, registration, metadata, bookmark
 Requires at least: 3.0.3
-Tested up to: 3.0.3
-Stable tag: 0.1
+Tested up to: 3.0.4
+Stable tag: 1.0
 License: GPLv2
 
 == Description ==
 
-Website Registration records metadata information embeded in a website, 
-namely url, title, author, keywords and description. 
+Website Registration records metadata information embeded in a website, namely url, title, author, keywords and description. This plugin may be useful when you want to save pages or domains of websites and share them to public. It's a bookmark-like. As an additional feature, this plugin may also allow public user to be contributed to the list of the url.
 
-As an admin or owner of a site/blog, you may have an option to use this 
-website registration not just in the plugin page but also in the 
-frontpage. Hence, you can ask people around the globe to contribute with 
-list of website that you want to populate.
-
+WARNING: If you've already used version 0.1 please deactivate the plugin first before updating to this version. Otherwise your database would be so ugly.
 
 == Installation ==
 
@@ -27,74 +22,39 @@ list of website that you want to populate.
 
 
 == Screenshots ==
-1. Website Registration setting page
+1. Website Registration Setting Page
 2. Website Registration form on the frontend using Monochrome Theme
 3. List of submitted websites on the frontend using Monochrome Theme 
 
 
-== Changelog ==
-
-= 0.1 =
-* Initital version 
-
-
 == Frequently Asked Questions ==
+
+The more detail and technical plugin is available in the admin page of the plugin.
 
 = What does this plugin do? =
 
-In a simple term: Records IP Address, Title, Authors, Keywords, and 
-Description of a website.
+In a simple term: Records IP Address, Title, Authors, Keywords, and Description of a website.
 
 = How can I use it? =
 
-Just type a domain or website, i.e. <code>http://yahoo.com</code> in the 
-form on the Website Registration Setting Page then press Submit. You'll 
-find what this plugin actually do.
+Just type a domain or website, i.e. http://yahoo.com in the form on the Website Registration Setting Page then press Submit. You'll find what this plugin actually do.
 
 = Can I use this form on my frontend page? =
 
-Yes you can. See the left widget next to Donate widget.
+Yes you can. 
 
-= Is it same between <code>http://example.com</code> and <code>http://example.com/abc</code>? =
+= Do I always need to write the protocol like 'http://' ? =
 
-Yes. The plugin will only record the domain name which is 
-<code>http://example.com</code>
-
-= How about URL written in IP address, such as <code>http://74.125.235.16</code>? =
-
-The plugin will treat them differently. So if you insert <code>
-http://74.125.235.16</code> and <code>http://google.com</code> 
-(both are the same host for Google Search Engine) to the form then the 
-plugin will consider it as a different domain. It's not a bug. Just a 
-limitation of the current version.
-
-= How can I insert style for the list? =
-
-Simply put, the listing table by default has embeded classes <code>
-widefat</code> and <code>wr_display_list</code>, so you can add your 
-css as you like in references to those classes, accordingly, and include 
-them in your css file.
-
-= Do I always need to write the protocol like <code>http://</code>? =
-
-Absolutely! it's part of the valid URL. 
+Absolutely! it's part of the valid URL.
 
 = In that case what kind of protocol that is allowed? =
 
-http, https, and ftp 
+http, https, and ftp
 
 = I got a strange behaviour when I use this plugin on my frontend page. What's wrong? =
 
-It depends. But first thing you need to check is that the permalinks 
-should not be set as a 'Default'. If this does not fix the issues then 
-please <a href="http://codeindesign.com/id/about/">email</a> and let me 
-know.
+It depends. But the first thing that you need to check is that the permalinks should not be set as a 'Default'. If this does not fix the issues then please email and let me know.
  
-= How about port number like <code>http://example.com:8080</code>? =
-
-Forgive this plugin but it's not allowed. If you specified the port number 
-then it will mark as invalid URL. 
-
 = Can I choose which metadata to be display? =
 
 Sorry, you cannot do that in this version.
@@ -105,8 +65,7 @@ Sorry, no.
 
 = Can I filter or search the result? =
 
-No. But if you passion enough to wait for future release then soon will be 
-yes.
+No. But if you passion enough to wait for future release then soon will be yes.
 
 = Is this plugin a crawler? =
 
@@ -116,28 +75,30 @@ Nope. Not even remotely.
 
 No. But soon in the next release.
 
-= Can I edit the entry? =
 
-Definitely not, for now.
+== Changelog ==
 
+= 1.0 =
+* NEW FEATURE: Added new shortcode for frontend form and list.
+* NEW FEATURE: The number of pages may be customed by administrator.
+* NEW FEATURE: Confirmation status for all URL that is submitted via frontend page
+* NEW FEATURE: You may choose which metadata to be displayed for you blog/site
+* NEW FEATURE: The plugin has the ability to store metadata not just for domain but page as well
+* Added animation hide/show the widgets 
+* Added Plugin Settings for set up the record url and display options
+* fixed mixing url between domain and page
+* changed the default order in the list
+* fixed bug pagination when sorting the list 
+* Removed [website_registration*] shortcode
+
+= 0.1 =
+* Initial version  
 
 == Upgrade Notice ==
+
+= 1.0 =
+This version fixed major bugs. Update immediately!
 
 = 0.1 =
 No upgrade notice at this moment
 
-
-== License ==
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
