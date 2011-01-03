@@ -4,7 +4,7 @@ Plugin Name: Website Registration
 Plugin URI: http://wordpress.org/#
 Description: This plugin collects the meta data of any desired sites based on submitted URL. These metadata includes URL, IP Address, Title, Author(s), Keywords, and Description.
 Author: Freelynx
-Version: 1.0.1
+Version: 1.0.2
 Author URI: http://codeindesign.com/id/about/
 */
 

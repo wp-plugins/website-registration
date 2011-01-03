@@ -55,7 +55,7 @@ class Validation {
     $this->_regexAlphanumeric = "/^[A-Za-z0-9]{1,}$/";
     $this->_regexPhone        = "/^\+[0-9]{2,3}[0-9 \-]{1,}$/";
     $this->_regexEmail        = "/^[a-zA-Z0-9\._]+@[a-z0-9\-_]+\.[a-z\.]{2,6}$/";
-    $this->_regexUrl          = "/^(http|https|ftp):\/\/[a-zA-Z0-9\.]+\.[a-z\.]{2,6}$/";
+    $this->_regexUrl          = "/^(http|https|ftp):\/\/[a-zA-Z0-9\.-]+\.[a-z\.]{2,6}$/";
     $this->_regexIpv4         = "/^((\d{1,3})\.){3}(\d{1,3})$/";
     $this->_regexIpv6         = "/^([a-fA-F0-9]{0,4}\:){7}([a-fA-F0-9]{0,4})$/";
     $this->_regexCustom       = "";
