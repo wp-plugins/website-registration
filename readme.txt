@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: website, registration, metadata, bookmark
 Requires at least: 3.0.3
 Tested up to: 3.0.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2
 
 == Description ==
@@ -77,6 +77,9 @@ No. But soon in the next release.
 
 
 == Changelog ==
+
+= 1.0.2 =
+* Fixed bug: allowed URL which contains '-'.
 
 = 1.0.1 =
 * Fixed some error for the documentation and file management.
