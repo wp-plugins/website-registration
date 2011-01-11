@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: Website Registration
-Plugin URI: http://wordpress.org/#
-Description: This plugin collects the meta data of any desired sites based on submitted URL. These metadata includes URL, IP Address, Title, Author(s), Keywords, and Description.
+Plugin URI: http://wordpress.org/extend/plugins/website-registration/
+Description: This plugin collects the meta data of any desired sites based on submitted URL. These metadata including URL, IP Address, Title, Author(s), Keywords, and Description.
 Author: Freelynx
-Version: 1.0.2
+Version: 1.3.3
 Author URI: http://codeindesign.com/id/about/
 */
 
@@ -89,7 +89,7 @@ function wr_add_option_pages() {
 	if (function_exists('wr_option_page')) {
 		$plugin_page = add_options_page('Web Reg Setting', 'Website Registration', 8, __FILE__, 'wr_option_page');
 		add_action( 'admin_head-'.$plugin_page, 'wr_admin_header' );
-		if($_COOKIE['wr_widgets'] == '') setcookie('wr_widgets','dum:donate:faq:frontend:setting:stat:');
+		if($_COOKIE['wr_widgets'] == '') setcookie('wr_widgets','dum:donate:faq:frontend:setting:stat:filter:');
 	}		
 }
 
@@ -106,7 +106,50 @@ function wr_admin_header() {?>
           else cookie += ':'; 
         });
         setCookie('wr_widgets',cookie);
-        //alert(cookie);
+      });
+      $('form[name="wr_the_table"]').submit(function() {
+        var param = $(this).serialize();
+        var arrpar = param.split('&');
+        var wrAction;
+        var wrEntries = new Array();
+        var arrUrl = new Array();
+        var j = 0;
+        for(var i=0;i<arrpar.length;i++) {
+          var variable = arrpar[i].split('=')[0];
+          var value = arrpar[i].split('=')[1];
+          if(variable == 'wr_action') { 
+            wrAction = value;
+          }
+          else if(variable.split('cb_').length == 2){
+            var id = variable.split('cb_')[1];
+            if(id != 'all') {
+              wrEntries[j] = id;
+              arrUrl[j] = $('a#wr_urlid_'+id).attr('href');
+              j++;
+            }
+          }
+        }      
+        var msg = 'You are about to '+((wrAction=='del')?'remove':'confirm')+' the following URL(s):\n'+arrUrl.join(',\n');
+        var cfm = confirm(msg);
+        if(cfm) {
+          window.location = '<?=WEBREG_URL;?>'+'&id='+wrEntries.join(',')+'&'+wrAction+'=true';
+        } else return false;
+      });
+      $('input[name="wr_cb_all"]').click(function(){
+        var chkbx = '.wr_display_list tbody input[type="checkbox"]';
+        if($(this).attr('checked')) {
+          $(chkbx).each(function(){
+            $(this).attr('checked','checked');
+          });
+        } else {
+          $(chkbx).each(function(){
+            $(this).removeAttr('checked');
+          });
+        }
+      });
+      $('select[name="wr_action"]').change(function(){
+        var value = $(this).val();
+        $('option[value="'+value+'"]').attr('selected','selected');
       });
     });
   </script>
@@ -129,12 +172,16 @@ function wr_option_page() {
     update_option("webreg_record",$_GET['wr_record']);
     update_option("webreg_nourl",$_GET['wr_nourl']);
   }
-  if($_GET['del']) $status = wr_delete_url($_GET['id']);
-  else if($_GET['confirm']) $status = wr_confirm_url($_GET['id']);
-  else $status = wr_submitting();
+  if($_GET['del'] || $_GET['confirm']) {
+    $arrid = explode(',',$_GET['id']);
+    for($i=0;$i<count($arrid);$i++) {
+      if($_GET['del']) $status = wr_delete_url($arrid[$i]);
+      if($_GET['confirm']) $status = wr_confirm_url($arrid[$i]);
+    }
+  } else $status = wr_submitting();
+  
   /* cookie handler */
   $arron = explode(':',$_COOKIE['wr_widgets']);
-  //print_r($arron);
   $donate = false;
   $faq = false;
   $frontend = false;
@@ -146,6 +193,7 @@ function wr_option_page() {
     if($arron[$i] == 'frontend') $frontend = true;
     if($arron[$i] == 'setting') $setting = true;
     if($arron[$i] == 'stat') $stat = true;
+    if($arron[$i] == 'filter') $filter = true;
   }
 ?>
 
@@ -155,7 +203,7 @@ function wr_option_page() {
     <div class="metabox-holder">
       <div style="float: right;">
         <div class="postbox">
-          <h3 class="hndle <?=($donate)?'on':'';?>" id="donate">Like The Plugin? You'll Know What To Do</h3>
+          <h3 class="hndle <?=($donate)?'on':'';?>" id="donate">Like The Plugin? You Know What To Do</h3>
           <div class="inside" style="text-align: center; padding: 10px 0px;<?=(!$donate)?'display:none;':'';?>">
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
               <input type="hidden" name="cmd" value="_s-xclick">
@@ -167,7 +215,7 @@ function wr_option_page() {
         </div>
         <div class="postbox" style="max-width: 330px;">
           <h3 class="hndle <?=($faq)?'on':'';?>" id="faq">FAQ</h3>
-          <div class="inside" style="max-height: 450px; overflow: auto;<?=(!$faq)?'display:none;':'';?>">
+          <div class="inside" style="max-height: 400px; overflow: auto;<?=(!$faq)?'display:none;':'';?>">
             <ul style="margin: 10px 15px; list-style-type: square; padding: 0px 10px;">
               <li><p><b>What does this plugin do?</b></p>
                   <p>In a simple term: Records IP Address, Title, Authors, Keywords, and Description of a website / webpage.</p></li>
@@ -198,7 +246,7 @@ function wr_option_page() {
               <li><p><b>Can I edit the url and its metadata?</b></p>
                   <p>Sorry, no.</p></li>
               <li><p><b>Can I filter or search the result?</b></p>
-                  <p>No. But if you passion enough to wait for future release then soon will be yes.</p></li>
+                  <p>Yes, finally!</p></li>
               <li><p><b>Is this plugin a crawler?</b></p>
                   <p>Nope. Not even remotely.</p></li>
               <li><p><b>Can I export the result as an XML or JSon?</b></p>
@@ -246,6 +294,37 @@ function wr_option_page() {
             </ul>
           </div>
         </div>
+        <div class="postbox">
+          <h3 class="hndle <?=($filter)?'on':'';?>" id="filter">Filter & Search</h3>
+          <div class="inside" style="text-align: center; padding: 10px;<?=(!$filter)?'display:none;':'';?>">
+            <form action="options-general.php" method="GET">
+            <input type="hidden" name="page" value="<?=$_GET["page"];?>" />
+            <table class="widefat">
+              <tbody>
+              <tr>
+                <th>Search</th>
+                <td style="text-align: left;">
+                  <?php wr_filter_search();?>
+                </td>
+              </tr>
+              <tr>
+                <th>Filter</th>
+                <td style="text-align: left;">
+                  <select name="wr_filter">
+                    <option value=""  <?=(($_GET['wr_filter'] == '')?'selected':'');?>>All</option>
+                    <option value="1" <?=(($_GET['wr_filter'] == '1')?'selected':'');?>>Confirmed</option>
+                    <option value="0" <?=(($_GET['wr_filter'] == '0')?'selected':'');?>>Unconfirmed</option>
+                  </select>
+                </td>
+              </tr>
+              </tbody>
+              <tfoot>
+                <td><input type="submit" value="Go!" class="button" /></td>
+              </tfoot>
+            </table>
+            </form>
+          </div>
+        </div>      
       </div>
       <div style="margin-right: 350px;">
         <div class="postbox">
@@ -271,6 +350,9 @@ function wr_option_page() {
                 </tr>
                 <tr>
                   <td><code>[wr_list_page]</code></td><td>Displaying the submitted webpage.</td>
+                </tr>
+                <tr>
+                  <td><code>[wr_filter_search]</code></td><td>Search the contents</td>
                 </tr>
               </tbody>
             </table>
@@ -356,8 +438,10 @@ function wr_option_page() {
         </div>
       </div>
     </div>
-  <div>
-<?php wr_display_list(get_option('webreg_record')); ?>
+  <div style="clear: both;">
+    <form action="javascript: void(0);" name="wr_the_table">
+      <?php wr_display_list(get_option('webreg_record')); ?>
+    </form>
   </div>
   </div>
 <?}
@@ -405,6 +489,19 @@ function wr_get_fp_form_page() {
 
 add_shortcode('wr_form_page','wr_get_fp_form_page');
 
+function wr_filter_search() {?>
+  <input type="text" value="<?=$_GET['wrq'];?>" name="wrq" style="width: 100%;" />
+<?}
+
+function wr_get_filter_search() {?>
+  <form action="<?=curPageURL(); ?>" method="GET">
+    <?php wr_filter_search();?>
+    <input type="submit" value="Go!" class="button" />
+  </form>
+<?}
+
+add_shortcode('wr_filter_search', 'wr_get_filter_search');
+
 function wr_submitting($table = '') {
   global $wpdb;
   
@@ -437,16 +534,16 @@ function wr_submitting($table = '') {
     if($exists <> 0) return "<span style='color: red;'>URL or domain <b><span style='color: grey;'>".$cleanurl."</span></b> exsits!</span>";
     else {
       $page = @file_get_contents($cleanurl);
-      $arrtitle  = explode("<title",$page);
-      $arrtitle1 = explode('>',$arrtitle[1]);
-      $arrtitle2 = explode('</title',$arrtitle1[1]);
+      $arrtitle  = explode("</title>",$page);
+      $arrtitle1 = explode('<title',$arrtitle[0]);
+      $arrtitle2 = explode('>',$arrtitle1[1]);
       $metapage = @get_meta_tags($cleanurl);
       $insert = "INSERT INTO `".$table."` (id, url, ip, title, author, keywords, description, confirmed) " .
                 "VALUES (
                   NULL, 
                   '".$cleanurl."',
                   '".$ip."',
-                  '".htmlspecialchars(addslashes(trim($arrtitle2[0])))."',
+                  '".htmlspecialchars(addslashes(trim($arrtitle2[1])))."',
                   '".htmlspecialchars(addslashes(trim($metapage['author'])))."',
                   '".htmlspecialchars(addslashes(trim($metapage['keywords'])))."',
                   '".htmlspecialchars(addslashes(trim($metapage['description'])))."',
@@ -482,7 +579,8 @@ function wr_display_list($table = '') {
       $limit = 'LIMIT '.$fpage.','.$nourl;
     break;
   }
-  $where = (is_admin())?'':"WHERE `confirmed`='1'";
+  
+  $where = wr_get_where();
   $table_name = $wpdb->prefix."webreg_".(($table == '')?get_option('webreg_record'):$table);
   $select = "SELECT * FROM `".$table_name."` ".$where." ".$order." ".$limit.";";
   $result = $wpdb->get_results($select,ARRAY_A);
@@ -490,8 +588,9 @@ function wr_display_list($table = '') {
   $i = ($fpage <= 0) ? 1 : ($fpage + 1);
   foreach ($result as $row) {
     $therow .= '<tr class="'.(($row['confirmed'] == '0')?'unconf':'').'">';
+    $therow .= (is_admin())?'<td style="text-align: center;"><input type="checkbox" name="wr_cb_'.$row['id'].'" style="margin-top: 4px;" /></td>':'';
     $therow .= '<td style="text-align: center;">'.$i.'</td>';
-    $therow .= '<td><a href="'.$row['url'].'">'.$row['url'].'</a></td>';
+    $therow .= '<td><a href="'.$row['url'].'" id="wr_urlid_'.$row['id'].'">'.$row['url'].'</a></td>';
     
     $therow .= ((!$meta[0]=='') || is_admin())?'<td>'.htmlspecialchars_decode($row['title']).'</td>':'';
     $therow .= ((!$meta[1]=='') || is_admin())?'<td>'.$row['ip'].'</td>':'';
@@ -506,8 +605,9 @@ function wr_display_list($table = '') {
   }
   
   $thetable .= '<table class="widefat wr_display_list" id="all-plugins-table">';
-  $thetable .= '<thead>';
-  $thetable .= '<tr><th><a href="'.WEBREG_URL.'&seq=id&sort='.$sort.'">No</a></th>';
+  $thetable .= '<thead><tr>';
+  $thetable .= (is_admin())?'<th style="text-align: center;"><input type="checkbox" name="wr_cb_all" style="margin: 0;" /></th>':'';
+  $thetable .= '<th><a href="'.WEBREG_URL.'&seq=id&sort='.$sort.'">No</a></th>';
   $thetable .= '<th><a href="'.WEBREG_URL.'&seq=url&sort='.$sort.'">URL</a></th>';
   $thetable .= ((!$meta[0]=='') || is_admin())?'<th><a href="'.WEBREG_URL.'&seq=Title&sort='.$sort.'">Title</a></th>':'';
   $thetable .= ((!$meta[1]=='') || is_admin())?'<th><a href="'.WEBREG_URL.'&seq=ip&sort='.$sort.'">IP</a></th>':'';
@@ -521,12 +621,65 @@ function wr_display_list($table = '') {
   $thetable .= '<tbody>'.$therow.'</tbody>';
   $thetable .= '</table>';
   
-  echo '<p>'.wr_pagination((($table == '')?get_option('webreg_record'):$table)).'</p>';
+  echo '<div style="line-height: 3em;">';
+  echo '<div style="float: left;">';
+        wr_add_action();
+  echo '</div>';
+  echo '<div style="text-align: right; margin-left: 300px;">'.wr_pagination((($table == '')?get_option('webreg_record'):$table)).'</div>';
+  echo '</div>';
   echo $thetable;
-  echo '<p>'.wr_pagination((($table == '')?get_option('webreg_record'):$table)).'</p>';
+  echo '<div style="line-height: 3em;">';
+  echo '<div style="float: left;">';
+        wr_add_action();
+  echo '</div>';
+  echo '<div style="float: right; margin-left: 300px;">'.wr_pagination((($table == '')?get_option('webreg_record'):$table)).'</div>';
+  echo '</div>';
+  
 }
 
 add_shortcode('wr_list','wr_display_list');
+
+function wr_add_action() {?>
+  <select style="width: 150px;" name="wr_action">
+    <option value="">Select Action</option>
+    <option value="confirm">Confirm</option>
+    <option value="del">Remove</option>
+  </select>
+  <input type="submit" class="button" value="Action" />
+<?}
+
+function wr_get_where() {
+  if(is_admin()) {
+    $filter = $_GET['wr_filter'];
+    switch($filter) {
+      case '':
+        $conf = '';
+      break;
+      case '1':
+        $conf = "`confirmed`='1'";
+      break;
+      case '0':
+        $conf = "`confirmed`='0'";
+      break;
+    }
+  } else $conf = '';
+  
+  $q = htmlspecialchars(addslashes(trim($_GET['wrq'])));
+  if($q != ''){
+    $q = "(`url` LIKE '%".$q."%' OR 
+          `title` LIKE '%".$q."%' OR 
+          `ip` LIKE '%".$q."%' OR 
+          `author` LIKE '%".$q."%' OR 
+          `keywords` LIKE '%".$q."%' OR
+          `description` LIKE '%".$q."%' OR 
+          `date` LIKE '%".$q."%')";
+  } else $q = '';
+  
+  if($q != '' && $conf != '') return "WHERE ".$q." AND ".$conf;
+  else if($q != '' && $conf == '') return "WHERE ".$q;
+  else if($q == '' && $conf != '') return "WHERE ".$conf;
+  else return "";
+}
 
 function wr_display_domain() {
   wr_display_list('domain');
@@ -542,7 +695,9 @@ add_shortcode('wr_list_page','wr_display_page');
 
 function wr_pagination($table) {
   global $wpdb;
-  $select = "SELECT COUNT(*) FROM `".$wpdb->prefix."webreg_".$table."`;";
+  //$where  = (!is_admin())?"WHERE `confirmed` = '1'":"";
+  $where = wr_get_where();
+  $select = "SELECT COUNT(*) FROM `".$wpdb->prefix."webreg_".$table."` ".$where.";";
   $result = $wpdb->get_var($select);
   if(($result <= get_option('webreg_nourl')) || ($result == '')) $page = 1;
   else $page = $result/get_option('webreg_nourl'); /* to get total page */
@@ -552,7 +707,7 @@ function wr_pagination($table) {
   
   $pageurl = explode('&wrp',curPageURL());
   $checkpage = explode('?',$pageurl[0]);
-  if(count($checkpage) <> 2) $pageurl[0] = $pageurl[0].'?';  
+  if(count($checkpage) <> 2) $pageurl[0] = $pageurl[0].'?';
   $totalpage = ceil($page);
   for($i=1;$i<=$totalpage;$i++) {
     if($_GET['wrp'] == '') {
@@ -572,18 +727,18 @@ function wr_pagination($table) {
   return $pages;
 }
 
-function wr_delete_url() {
+function wr_delete_url($id='') {
   global $wpdb;
-  $id = htmlspecialchars($_GET['id']);
+  $id = ($id=='') ? htmlspecialchars($_GET['id']):$id;
   $delete = "DELETE FROM `".$wpdb->prefix."webreg_".get_option('webreg_record')."` WHERE id='".$id."'";
   $result = $wpdb->query($delete);
   if(!$result) return "<span style='color: red;'>Deleting URL Failed!</span>";
   else return "<span style='color: blue;'>Deleting URL Success!</span>";
 }
 
-function wr_confirm_url() {
+function wr_confirm_url($id='') {
   global $wpdb;
-  $id = htmlspecialchars($_GET['id']);
+  $id = ($id=='')?htmlspecialchars($_GET['id']):$id;
   $update = "UPDATE  `".$wpdb->prefix."webreg_".get_option('webreg_record')."` SET  `confirmed` =  '1' WHERE  `id` ='".$id."';";
   $result = $wpdb->query($update);
   if(!$result) return "<span style='color: red;'>Confirming URL failed!</span>";

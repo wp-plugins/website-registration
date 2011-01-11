@@ -1,17 +1,26 @@
 === Website Registration ===
 Contributors: Freelynx  
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LTUB9HAHBXTHJ
-Tags: website, registration, metadata, bookmark
+Tags: website, registration, metadata, bookmark, links
 Requires at least: 3.0.3
 Tested up to: 3.0.4
-Stable tag: 1.0.2
+Stable tag: 1.3.3
 License: GPLv2
 
 == Description ==
 
-Website Registration records metadata information embeded in a website, namely url, title, author, keywords and description. This plugin may be useful when you want to save pages or domains of websites and share them to public. It's a bookmark-like. As an additional feature, this plugin may also allow public user to be contributed to the list of the url.
+Website Registration records metadata information embeded in a website, namely url, title, author, keywords and description. This plugin might be useful when you want to save pages or domains of websites and share them to public. It's a bookmark-like. As an additional feature, this plugin may also allow public user to be contributed to the list of the url.
 
-WARNING: If you've already used version 0.1 please deactivate the plugin first before updating to this version. Otherwise your database would be so ugly.
+WARNING: If you've already used version 0.1 please deactivate the plugin first before updating to other version. Otherwise your database would be so ugly.
+
+The plugin provides several different ready-to-use shortcodes:
+* [wr_form] : Displaying the form for URLs to be submitted based on Admin selection.
+* [wr_form_domain] : Displaying the form for submitting domain of the given URLs.
+* [wr_form_page] : Displaying the form for submitting page of given URLs.
+* [wr_list] : Displaying the list selected by administrator.
+* [wr_list_domain] : Displaying the list of collected domain.
+* [wr_list_page] : Displaying the list of collected pages.
+* [wr_filter_search] : Search the contents.
 
 == Installation ==
 
@@ -22,9 +31,9 @@ WARNING: If you've already used version 0.1 please deactivate the plugin first b
 
 
 == Screenshots ==
-1. Website Registration Setting Page
-2. Website Registration form on the frontend using Monochrome Theme
-3. List of submitted websites on the frontend using Monochrome Theme 
+Screenshot is available on my blog 
+
+http://freelynx.wordpress.com/2011/01/04/wordpress-plugin-website-registration/
 
 
 == Frequently Asked Questions ==
@@ -57,7 +66,7 @@ It depends. But the first thing that you need to check is that the permalinks sh
  
 = Can I choose which metadata to be display? =
 
-Sorry, you cannot do that in this version.
+Yes, absolutely.
  
 = Can I edit the url and its metadata? =
 
@@ -65,7 +74,7 @@ Sorry, no.
 
 = Can I filter or search the result? =
 
-No. But if you passion enough to wait for future release then soon will be yes.
+Yes, finally!
 
 = Is this plugin a crawler? =
 
@@ -77,6 +86,12 @@ No. But soon in the next release.
 
 
 == Changelog ==
+
+= 1.3.3 =
+* NEW FEATURE: confirming and Removing multi-url
+* NEW FEATURE: Filtering confirmed/unconfirmed on Admin page
+* NEW FEATURE: Searching the database.
+* Fixed bug: pagination on frontend page
 
 = 1.0.2 =
 * Fixed bug: allowed URL which contains '-'.
@@ -90,7 +105,7 @@ No. But soon in the next release.
 * NEW FEATURE: Confirmation status for all URL that is submitted via frontend page
 * NEW FEATURE: You may choose which metadata to be displayed for you blog/site
 * NEW FEATURE: The plugin has the ability to store metadata not just for domain but page as well
-* Added animation hide/show the widgets 
+* Added animation to hide/show the widgets contents. 
 * Added Plugin Settings for set up the record url and display options
 * fixed mixing url between domain and page
 * changed the default order in the list
