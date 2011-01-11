@@ -14,13 +14,15 @@ Website Registration records metadata information embeded in a website, namely u
 WARNING: If you've already used version 0.1 please deactivate the plugin first before updating to other version. Otherwise your database would be so ugly.
 
 The plugin provides several different ready-to-use shortcodes:
-* [wr_form] : Displaying the form for URLs to be submitted based on Admin selection.
-* [wr_form_domain] : Displaying the form for submitting domain of the given URLs.
-* [wr_form_page] : Displaying the form for submitting page of given URLs.
-* [wr_list] : Displaying the list selected by administrator.
-* [wr_list_domain] : Displaying the list of collected domain.
-* [wr_list_page] : Displaying the list of collected pages.
-* [wr_filter_search] : Search the contents.
+<ul>
+<li>[wr_form] : Displaying the form for URLs to be submitted based on Admin selection.</li>
+<li>[wr_form_domain] : Displaying the form for submitting domain of the given URLs.</li>
+<li>[wr_form_page] : Displaying the form for submitting page of given URLs.</li>
+<li>[wr_list] : Displaying the list selected by administrator.</li>
+<li>[wr_list_domain] : Displaying the list of collected domain.</li>
+<li>[wr_list_page] : Displaying the list of collected pages.</li>
+<li>[wr_filter_search] : Search the contents.</li>
+</ul>
 
 == Installation ==
 
